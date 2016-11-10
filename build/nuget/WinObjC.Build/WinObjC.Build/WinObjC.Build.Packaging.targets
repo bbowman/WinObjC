@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <Target Name="GetPackageVersion" Returns="$(PackageVersion)">
+    <!-- NOTE: customize to determine your package version more dynamically -->
+    <PropertyGroup>
+      <PackageVersion>0.0.1</PackageVersion>
+    </PropertyGroup>
+  </Target>
+
+    <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
+        <!-- Inlcude custom .props and .targets files. These are automatically added to a consuming project. -->
+        <!-- This helps bootstrap the package and abstracts out starboard and other concepts that may change -->
+        <!-- in future versions of the package. -->
+        <ItemGroup>
+            <PackageFile Include="$(MSBuildThisFileDir)WinObjC.Build.props">
+                <PackagePath>build\native\WinObjC.Build.props</PackagePath>
+            </PackageFile>
+            <PackageFile Include="$(MSBuildThisFileDir)WinObjC.Build.targets">
+                <PackagePath>build\native\WinObjC.Build.targets</PackagePath>
+            </PackageFile>
+        </ItemGroup>
+
+        <!-- Inlcude *all* of /msvc/ folder. Almost certainly overkill at this stage. Things like the .sln     -->
+        <!-- for ClangCompile shouldn't be shipped in the package really but ok for bootstrapping the process. -->
+        <!-- Pare this down in a future version!!! -->
+        <ItemGroup>
+            <_msvcFiles Include="$(MSBuildThisFileDir)..\..\..\..\msvc\**\*.*"/>
+        </ItemGroup>
+        <ItemGroup>
+            <PackageFile Include="@(_msvcFiles)">
+                <PackagePath>build\native\msvc\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+            </PackageFile>
+        </ItemGroup>
+    </Target>
+
+</Project>
