@@ -764,7 +764,6 @@ namespace ClangCompile
             Description = "Hidden force inclusions",
             Switch = "-include ",
             Visible = false)]
-        [ResolvePath()]
         public string[] InternalForceIncludes { get; set; }
 
         [PropertyPage(
