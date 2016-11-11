@@ -4,7 +4,13 @@
   <Target Name="GetPackageVersion" Returns="$(PackageVersion)">
     <!-- NOTE: customize to determine your package version more dynamically -->
     <PropertyGroup>
-      <PackageVersion>0.0.1</PackageVersion>
+        <BasePackageVersion>0.0.1</BasePackageVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(GitBranch)' != 'master'">
+      <PackageVersion>$(BasePackageVersion)-$(GitBranch).$([System.DateTime]::Now.ToString(yyyyMMdd-mmss))</PackageVersion>
+    </PropertyGroup>
+     <PropertyGroup Condition="'$(GitBranch)' == 'master'">
+      <PackageVersion>$(BasePackageVersion)</PackageVersion>
     </PropertyGroup>
   </Target>
 
@@ -25,11 +31,21 @@
         <!-- for ClangCompile shouldn't be shipped in the package really but ok for bootstrapping the process. -->
         <!-- Pare this down in a future version!!! -->
         <ItemGroup>
-            <_msvcFiles Include="$(MSBuildThisFileDir)..\..\..\..\msvc\**\*.*"/>
+            <_MSVCFiles Include="$(MSBuildThisFileDir)..\msvc\**\*.*"/>
         </ItemGroup>
         <ItemGroup>
-            <PackageFile Include="@(_msvcFiles)">
+            <PackageFile Include="@(_MSVCFiles)">
                 <PackagePath>build\native\msvc\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+            </PackageFile>
+        </ItemGroup>
+        
+        <!-- Inlcude *all* of /include/WOCStdLib folder.  -->
+        <ItemGroup>
+            <_WOCStdLib Include="$(MSBuildThisFileDir)..\include\WOCStdLib\**\*.*"/>
+        </ItemGroup>
+        <ItemGroup>
+            <PackageFile Include="@(_WOCStdLib)">
+                <PackagePath>build\native\include\WOCStdLib\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
             </PackageFile>
         </ItemGroup>
     </Target>
