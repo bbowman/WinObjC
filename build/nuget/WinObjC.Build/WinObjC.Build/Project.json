@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "GitInfo": "1.1.32",
-    "NuGet.Build.Packaging": "0.1.157-dev"
+    "NuGet.Build.Packaging": "0.1.161-dev"
   },
   "frameworks": {
     "NuGet,Version=v1.0": {

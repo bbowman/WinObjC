@@ -43,6 +43,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClangCompileTask\ClangCompile.csproj" />
+    <ProjectReference Include="..\GenVersionFiles\GenVersionFiles.csproj" />
+    <ProjectReference Include="..\PropSchemaGen\PropSchemaGen.csproj" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
   <Import Project="WinObjC.Build.Packaging.targets" />

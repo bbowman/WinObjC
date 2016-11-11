@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup>
+    <Import Project="$(MSBuildThisFileDirectory)starboard.targets" />
+  </ImportGroup>
+  <Target Name="CopyCoreFoundationPublicHeadersToIncludes">
+    <Copy
+        SourceFiles="@(CoreFoundationPublicHeader)" 
+        DestinationFolder="$(MSBuildThisFileDirectory)..\Include\CoreFoundation\" 
+        ContinueOnError="true" 
+        SkipUnchangedFiles="true"/>
+  </Target>
+  <Target Name="CopyCoreFoundationPrivateHeadersToIncludes">
+    <Copy
+        SourceFiles="@(CoreFoundationPrivateHeader)" 
+        DestinationFolder="$(MSBuildThisFileDirectory)..\Frameworks\include\" 
+        ContinueOnError="true" 
+        SkipUnchangedFiles="true"/>
+  </Target>
+  <PropertyGroup>
+    <BuildGenerateSourcesTargets>
+      $(BuildGenerateSourcesTargets);
+      CopyCoreFoundationPrivateHeadersToIncludes;
+      CopyCoreFoundationPublicHeadersToIncludes;
+    </BuildGenerateSourcesTargets>
+  </PropertyGroup>
+</Project>

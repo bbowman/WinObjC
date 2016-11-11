@@ -5,6 +5,6 @@
   </PropertyGroup>
   <ImportGroup>
     <Import Project="$(NuGetPackageRoot)gitinfo\1.1.32\build\GitInfo.targets" Condition="Exists('$(NuGetPackageRoot)gitinfo\1.1.32\build\GitInfo.targets')" />
-    <Import Project="$(NuGetPackageRoot)nuget.build.packaging\0.1.157-dev\build\NuGet.Build.Packaging.targets" Condition="Exists('$(NuGetPackageRoot)nuget.build.packaging\0.1.157-dev\build\NuGet.Build.Packaging.targets')" />
+    <Import Project="$(NuGetPackageRoot)nuget.build.packaging\0.1.161-dev\build\NuGet.Build.Packaging.targets" Condition="Exists('$(NuGetPackageRoot)nuget.build.packaging\0.1.161-dev\build\NuGet.Build.Packaging.targets')" />
   </ImportGroup>
 </Project>

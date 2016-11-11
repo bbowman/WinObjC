@@ -1,13 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+  <PropertyGroup>
+      <GitThisAssembly>true</GitThisAssembly>
+  </PropertyGroup>
   
   <Target Name="GetPackageVersion" Returns="$(PackageVersion)">
-    <!-- NOTE: customize to determine your package version more dynamically -->
+    <!-- TODO: read in BasePackageVersion from somewhere useful -->
     <PropertyGroup>
         <BasePackageVersion>0.0.1</BasePackageVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(GitBranch)' != 'master'">
-      <PackageVersion>$(BasePackageVersion)-$(GitBranch).$([System.DateTime]::Now.ToString(yyyyMMdd-mmss))</PackageVersion>
+      <GitBranchToUse Condition="'$(GitBranch.Length)' > '6'">$(GitBranch.Substring(0,5))</GitBranchToUse>
+      <GitBranchToUse Condition="'$(GitBranchToUse)' == ''">$(GitBranch)</GitBranchToUse>
+      <PackageVersion>$(BasePackageVersion)-$(GitBranchToUse.Replace('.','_')).$([System.DateTime]::Now.ToString(yyyyMMddhhmmss))</PackageVersion>
     </PropertyGroup>
      <PropertyGroup Condition="'$(GitBranch)' == 'master'">
       <PackageVersion>$(BasePackageVersion)</PackageVersion>

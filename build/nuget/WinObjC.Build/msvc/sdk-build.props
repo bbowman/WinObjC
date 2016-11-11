@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition="'$(ConfigurationType)'=='DynamicLibrary'">
+    <ProjectReference Condition="'$(LinkWithFoundation)' != 'false'" Include="$(StarboardBasePath)\build\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
+    </ProjectReference>
+    <ProjectReference Condition="'$(LinkWithStarboard)' != 'false'" Include="$(StarboardBasePath)\build\Starboard\dll\Starboard.vcxproj">
+      <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
+    </ProjectReference>
+    <ProjectReference Condition="'$(LinkWithWinObjCRT)' != 'false'" Include="$(StarboardBasePath)\build\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
+    <ProjectReference Condition="'$(LinkWithLogging)' != 'false'" Include="$(StarboardBasePath)\build\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(ConfigurationType)'=='StaticLibrary'">
+    <ProjectReference Condition="'$(LinkWithIwNew)' != 'false'" Include="$(StarboardBasePath)\build\IwNew\lib\IwNewLib.vcxproj">
+      <Project>{b16c8766-1d05-46c0-b231-10c3aa43c19b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <DefaultLanguage Condition="'$(DefaultLanguage)'==''">en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication Condition="'$(AppContainerApplication)'==''">true</AppContainerApplication>
+    <ApplicationType Condition="'$(ApplicationType)'==''">Windows Store</ApplicationType>
+    <ApplicationTypeRevision Condition="'$(ApplicationTypeRevision)'==''">10.0</ApplicationTypeRevision>
+    <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)'==''">true</UseStarboardSourceSdk>
+    <IslandwoodDRT Condition="'$(IslandwoodDRT)'==''">false</IslandwoodDRT>
+    <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)'==''">false</StarboardLinkWholeArchive>
+    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
+    <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">true</WholeProgramOptimization>
+    <UseDotNetNativeToolchain Condition="'$(Configuration)'=='Release'">true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <ImportGroup>
+    <Import Project="$(MSBuildThisFileDirectory)starboard.props" />
+  </ImportGroup>
+
+  <PropertyGroup>
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
+    <TargetName>$(OutputName)</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization Condition="'$(Configuration)'=='Debug'">Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4087 /ignore:4001 %(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+
+      <!-- Ensure we pick up operator new from our project rather than the C runtime -->
+      <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
+    </Link>
+    <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <SystemHeaderDeps>true</SystemHeaderDeps>
+      <AdditionalOptions>-Werror -Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+
+
+  <ItemGroup>
+    <!-- Since Core Foundation has been forked and its directory structure does not match WinObjC's, copy all public headers into the right spot. -->
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Stream.subproj\CFStream.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\String.subproj\CFStringEncodingExt.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\SwiftRuntime\TargetConditionals.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\RunLoop.subproj\CFMessagePort.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFBinaryHeap.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Locale.subproj\CFCalendar.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFBitVector.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFAvailability.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFTree.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\NumberDate.subproj\CFTimeZone.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Error.subproj\CFError.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFBag.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLParser.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\String.subproj\CFString.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFSet.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFUUID.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\NumberDate.subproj\CFDate.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFDictionary.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFByteOrder.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\AppServices.subproj\CFUserNotification.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFBase.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Preferences.subproj\CFPreferences.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Locale.subproj\CFLocale.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\RunLoop.subproj\CFSocket.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Parsing.subproj\CFPropertyList.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFArray.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\RunLoop.subproj\CFRunLoop.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\URL.subproj\CFURLAccess.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Locale.subproj\CFDateFormatter.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\RunLoop.subproj\CFMachPort.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugInCOM.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFUtilities.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLNode.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\URL.subproj\CFURLComponents.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\URL.subproj\CFURL.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Locale.subproj\CFNumberFormatter.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\String.subproj\CFCharacterSet.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\NumberDate.subproj\CFNumber.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Collections.subproj\CFData.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\String.subproj\CFAttributedString.h"/>
+    <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\module.modulemap"/>
+  </ItemGroup>
+    <ItemGroup>
+    <!-- Since Core Foundation has been forked and its directory structure does not match WinObjC's, copy all shared private headers into the right spot. -->
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\ForFoundationOnly.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFBridgeUtilities.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFPriv.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundlePriv.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Stream.subproj\CFStreamPriv.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\String.subproj\CFRegularExpression.h"/>
+  </ItemGroup>
+</Project>
