@@ -36,6 +36,8 @@
   <ItemGroup>
     <None Include="project.json" />
     <None Include="WinObjC.Build.Packaging.targets" />
+    <None Include="WinObjC.Build.props" />
+    <None Include="WinObjC.Build.targets" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt">

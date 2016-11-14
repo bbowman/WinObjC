@@ -84,7 +84,7 @@
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
     <ItemGroup>
       <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
-        <PackagePath>build\native\msvc\%(Filename)%(Extension)</PackagePath>
+        <PackagePath>build\msvc\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
     </ItemGroup>
   </Target>

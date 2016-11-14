@@ -20,5 +20,3 @@ typedef long off_t;
 #ifndef __cplusplus
 typedef unsigned short WCHAR;
 #endif
-
-

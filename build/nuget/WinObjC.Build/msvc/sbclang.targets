@@ -384,6 +384,7 @@
       <!-- Choose configuration that corresponds to the CRT -->
       <StarboardCRTConfig>Release</StarboardCRTConfig>
       <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
+      <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)' == ''">true</UseStarboardSourceSdk>
     </PropertyGroup>
 
     <!-- UseStarboardSourceSdk gates whether a project links against the WinObjC source tree (as an SDK) or a packaged SDK. -->
@@ -393,7 +394,8 @@
       <!-- Directory for built libraries whose configuration must match the client's -->
       <StarboardConfigSpecificLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificLibsDir>
       <!-- Prebuilts for all configurations -->
-      <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
+      <StarboardPrebuiltLibsDir Condition="'$(TargetOsAndVersion)' == 'Universal Windows'">$(MSBuildThisFileDirectory)..\deps\prebuilt\UWP\$(PlatformTarget)</StarboardPrebuiltLibsDir>
+      <StarboardPrebuiltLibsDir Condition="'$(StarboardPrebuiltLibsDir)' == ''">$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
       <!-- Configuration-specific prebuilts (libraries that need to use the same allocator as the client -->
       <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardPrebuiltLibsDir)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
     </PropertyGroup>
@@ -649,8 +651,11 @@
     <!-- Figure out whether Objective-C should be pinned -->
     <ItemGroup>
       <ClangCompile>
+        <InternalSystemIncludePaths Condition=
+             "'%(ClangCompile.CompileAs)' == 'CompileAsObjC' or 
+             '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">$(MSBuildThisFileDirectory)\objcrt\;%(InternalSystemIncludePaths)</InternalSystemIncludePaths>
         <InternalForceIncludes Condition="'%(ClangCompile.CompileAs)' == 'CompileAsObjC' or
-                                          '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">$(MSBuildThisFileDirectory)\objcrt\objc_2stage_init.h;%(InternalForceIncludes)</InternalForceIncludes>
+                                          '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">objc_2stage_init.h;%(InternalForceIncludes)</InternalForceIncludes>
       </ClangCompile>
     </ItemGroup>
 
