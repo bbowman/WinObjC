@@ -35,8 +35,6 @@
 
 #ifdef __OBJC__
 
-#include "UIKit/UIKit.h"
-
 static const float kPi = 3.14159265358979323846f;
 static const double kPi_d = 3.14159265358979323846;
 
@@ -154,62 +152,7 @@ struct EbrInputEvent {
     double touchTime;
 };
 
-#ifdef __cplusplus
-template <class T>
-class EbrComPtr {
-public:
-    T* _val;
-
-    EbrComPtr() {
-        _val = NULL;
-    }
-
-    T* Get() {
-        return _val;
-    }
-
-    T** ReleaseAndGetAddressOf() {
-        Release();
-        return &_val;
-    }
-
-    T** GetAddressOf() {
-        return &_val;
-    }
-
-    void Release() {
-        if (_val)
-            _val->Release();
-        _val = NULL;
-    }
-
-    template <typename U>
-    unsigned int As(EbrComPtr<U>* p) const {
-        return (unsigned int)_val->QueryInterface(__uuidof(U), (void**)p);
-    }
-
-    T* operator->() {
-        return _val;
-    }
-
-    operator T*() {
-        return _val;
-    }
-
-    EbrComPtr<T>& operator=(T* val) {
-        if (val)
-            val->AddRef();
-        if (_val)
-            _val->Release();
-
-        _val = val;
-
-        return *this;
-    }
-};
-#endif
-
-#define idt(type) type *
+#define idt(type) type*
 
 #ifdef __OBJC__
 extern "C" BOOL object_isMethodFromClass(id dwObj, SEL pSel, const char* fromClass);
