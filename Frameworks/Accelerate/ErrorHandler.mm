@@ -17,7 +17,6 @@
 
 #import "../Include/Starboard.h"
 
-
 extern "C" void AccelerateThrowFatal(const char* msg) {
     FAIL_FAST_MSG(msg);
 }
