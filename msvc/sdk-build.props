@@ -51,10 +51,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
 
-  <ImportGroup>
-    <Import Project="$(MSBuildThisFileDirectory)starboard.props" />
-  </ImportGroup>
-
   <PropertyGroup>
     <GenerateManifest>false</GenerateManifest>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
