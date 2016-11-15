@@ -126,6 +126,6 @@ Frameworks/Include/CFRegularExpression.h
 !/**/deps/prebuilt/**/[Rr]elease
 # The repository root /bin, and the build tools bin/
 !/bin
-!/msvc/**/bin
+!/**/msvc/**/bin
 
 .tools
