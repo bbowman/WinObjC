@@ -116,9 +116,9 @@ Frameworks/Include/CFRuntime.h
 Frameworks/Include/CFStreamPriv.h
 Frameworks/Include/CFRegularExpression.h
 
-build/**/*nuget.props
-build/**/*nuget.targets
-build/**/*.log
+*nuget.props
+*nuget.targets
+*.log
 
 #### DO NOT IGNORE ####
 # The prebuilts! We want those.
