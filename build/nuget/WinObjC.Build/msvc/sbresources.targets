@@ -26,8 +26,6 @@
     </AvailableItemName>
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)zip.tasks" />
-
   <PropertyGroup>
     <Xib2NibExe>$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe</Xib2NibExe>
     <SbExpandVarsExe>$(MSBuildThisFileDirectory)..\bin\sb-expandvars.exe</SbExpandVarsExe>

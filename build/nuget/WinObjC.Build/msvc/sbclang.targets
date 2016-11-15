@@ -54,8 +54,6 @@
     <PublicHeaderArgsFile>$(PublicHeadersDir)\$(TargetName)$(PublicHeaderArgsFileSuffix)</PublicHeaderArgsFile>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)\middleware.targets" />
-
   <Target
     Name="FindPublicHeaders"
     Condition="'$(ConfigurationType)' == 'StaticLibrary' or '$(ConfigurationType)' == 'DynamicLibrary'" >
@@ -384,11 +382,9 @@
       <!-- Choose configuration that corresponds to the CRT -->
       <StarboardCRTConfig>Release</StarboardCRTConfig>
       <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
-      <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)' == ''">true</UseStarboardSourceSdk>
     </PropertyGroup>
 
-    <!-- UseStarboardSourceSdk gates whether a project links against the WinObjC source tree (as an SDK) or a packaged SDK. -->
-    <PropertyGroup Condition="'$(UseStarboardSourceSdk)' == 'true'">
+    <PropertyGroup>
       <!-- Library directories for in-tree builds and builds linking against the source tree. -->
       <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardCRTConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
       <!-- Directory for built libraries whose configuration must match the client's -->
@@ -397,15 +393,6 @@
       <StarboardPrebuiltLibsDir Condition="'$(StarboardPrebuiltLibsDir)' == ''">$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
       <!-- Configuration-specific prebuilts (libraries that need to use the same allocator as the client -->
       <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardPrebuiltLibsDir)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(UseStarboardSourceSdk)' != 'true'">
-      <!-- Library directories for projects preferring to link against the packaged SDK. -->
-      <!-- Prebuilts and WinObjC libraries live in the same directory once packaged -->
-      <StarboardLibDirs>$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
-      <StarboardConfigSpecificLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificLibsDir>
-      <StarboardPrebuiltLibsDir>$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
-      <!-- Configuration-specific prebuilts retain their configuration specificity, as both Debug and Release are shipped as part of the archive. -->
-      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -681,9 +668,16 @@
     DependsOnTargets="$(ComputeLinkInputsTargets)"
     BeforeTargets="CreateWinMD">
 
+    <PropertyGroup Condition="'@(ClCompile)' != ''">
+      <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.Contains('MultiThreadedDLL'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.Contains('MultiThreadedDebugDLL'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
+    </PropertyGroup>
+
     <ItemGroup>
       <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
         <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+        <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
         <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
       </Link>
     </ItemGroup>
@@ -695,12 +689,19 @@
        metadata will result in multiple invocations of link.exe due to task batching. -->
   <Target
     Name="FixAdditionalLibraryDirectoriesLink"
-    DependsOnTargets="FixAdditionalLibraryDirectoriesWinMD"
+    DependsOnTargets="FixAdditionalLibraryDirectoriesWinMD;XamlPreLink"
     BeforeTargets="Link">
+
+    <PropertyGroup Condition="'@(ClCompile)' != ''">
+      <ClCompileCRTs>@(ClCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClCompileCRTs>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.Contains('MultiThreadedDLL'))">/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib </AdditionalOptionsToUse>
+      <AdditionalOptionsToUse Condition="$(ClCompileCRTs.Contains('MultiThreadedDebugDLL'))">/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib </AdditionalOptionsToUse>
+    </PropertyGroup>
 
     <ItemGroup>
       <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
         <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+        <AdditionalOptions Condition="$(AdditionalOptionsToUse) != ''">$(AdditionalOptionsToUse) %(Link.AdditionalOptions)</AdditionalOptions>
         <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
       </Link>
     </ItemGroup>
@@ -733,7 +734,6 @@
   <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions;ComputeStarboardRequiresObjectiveCRuntime">
     <ItemGroup>
       <Link Condition="'$(StarboardLinkObjCRuntime)' == 'true' and '$(StarboardRequiresObjectiveCRuntime)' == 'true'" Include="$(StarboardObjCRuntimeLib)"/>
-      <Link Condition="'$(StarboardRuntimeLib)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardRuntimeLib)"/>
       <Link Condition="'$(StarboardDefaultLibs)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardDefaultLibs)"/>
     </ItemGroup>
   </Target>
