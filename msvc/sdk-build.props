@@ -66,7 +66,8 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>true</TreatWarningAsError>    
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\include\VCInclude</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -78,6 +79,7 @@
 
       <!-- Ensure we pick up operator new from our project rather than the C runtime -->
       <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(MSBuildThisFileDirectory)..\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -87,6 +89,7 @@
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(IncludePath);$(MSBuildThisFileDirectory)..\include\;$(MSBuildThisFileDirectory)..\include\xplat;$(MSBuildThisFileDirectory)..\include\VCInclude\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\icu;$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)..\include\Platform', '$(TargetOsAndVersion)'))</InternalSystemIncludePaths>
       <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory)..\Frameworks\include\;</IncludePaths>
+      <InternalForceIncludes>%(InternalForceIncludes);StubIncludes.h;</InternalForceIncludes>
     </ClangCompile>
   </ItemDefinitionGroup>
 

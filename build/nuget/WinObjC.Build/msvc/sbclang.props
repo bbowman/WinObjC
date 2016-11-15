@@ -63,9 +63,5 @@
       <AutocompleteCommandLineTemplate>$(ClangArgs) [AllOptions] [AdditionalOptions]</AutocompleteCommandLineTemplate>
       <ShowOnlyRuleProperties>false</ShowOnlyRuleProperties>
     </ClangCompile>
-
-    <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardSdkRoot)\include\VCInclude</AdditionalIncludeDirectories>
-    </ClCompile>
   </ItemDefinitionGroup>
 </Project>
