@@ -28,6 +28,9 @@
     <Copyright>Copyright © Microsoft</Copyright>
     <PackageTags>WinObjC.Build</PackageTags>
     <IsDevelopmentDependency>true</IsDevelopmentDependency>
+    <IncludeContentInPackage>false</IncludeContentInPackage>
+    <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
+    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <OutputPath>bin\$(Configuration)\</OutputPath>
