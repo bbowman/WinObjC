@@ -1,7 +1,7 @@
-[submodule "tools/vsimporter/third-party/PlistCpp"]
+[submodule "WinObjC.Tools/vsimporter/third-party/PlistCpp"]
 	path = WinObjC.Tools/vsimporter/third-party/PlistCpp
 	url = https://github.com/Microsoft/PlistCpp.git
-[submodule "tools/vsimporter/third-party/sole"]
+[submodule "WinObjC.Tools/vsimporter/third-party/sole"]
 	path = WinObjC.Tools/vsimporter/third-party/sole
 	url = https://github.com/r-lyeh/sole.git
 [submodule "deps/3rdparty/openssl"]
