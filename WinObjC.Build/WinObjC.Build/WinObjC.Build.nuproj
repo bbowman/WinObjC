@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClangCompileTask\ClangCompile.csproj" />
-    <ProjectReference Include="..\GenVersionFiles\GenVersionFiles.csproj" />
     <ProjectReference Include="..\PropSchemaGen\PropSchemaGen.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
