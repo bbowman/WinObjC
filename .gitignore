@@ -127,3 +127,5 @@ build/**/*.log
 # The repository root /bin, and the build tools bin/
 !/bin
 !/msvc/**/bin
+
+.tools
