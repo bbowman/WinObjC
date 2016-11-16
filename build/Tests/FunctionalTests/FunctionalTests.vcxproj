@@ -291,4 +291,7 @@
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
   </ImportGroup>
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>
