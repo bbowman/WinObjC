@@ -19,3 +19,9 @@
 [submodule "deps/3rdparty/libobjc2"]
 	path = deps/3rdparty/libobjc2
 	url = https://github.com/Microsoft/libobjc2
+[submodule "WinObjC.Tools/vsimporter/third-party/PlistCpp"]
+	path = WinObjC.Tools/vsimporter/third-party/PlistCpp
+	url = https://github.com/Microsoft/PlistCpp
+[submodule "WinObjC.Tools/vsimporter/third-party/sole"]
+	path = WinObjC.Tools/vsimporter/third-party/sole
+	url = https://github.com/r-lyeh/sole.git
