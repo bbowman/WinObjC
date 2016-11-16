@@ -15,17 +15,16 @@
   <PropertyGroup Label="Configuration">
     <PackageId>WinObjC.Tools</PackageId>
     <Title>WinObjC.Tools</Title>
-    <Authors>bbowman</Authors>
-    <Owners>bbowman</Owners>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
     <Summary>WinObjC.Tools</Summary>
     <Description>WinObjC.Tools</Description>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
-    <PackageProjectUrl>
-    </PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Microsoft/WinObjC</PackageProjectUrl>
     <PackageLicenseUrl>
     </PackageLicenseUrl>
-    <Copyright>Copyright © bbowman</Copyright>
+    <Copyright>Copyright © Microsoft</Copyright>
     <PackageTags>WinObjC.Tools</PackageTags>
   </PropertyGroup>
   <PropertyGroup Label="Globals">

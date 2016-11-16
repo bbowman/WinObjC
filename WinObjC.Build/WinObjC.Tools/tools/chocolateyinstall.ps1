@@ -18,13 +18,13 @@ $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 # Install an application, will assert administrative rights
 # add additional optional arguments as necessary
 #Install-ChocolateyPackage "$packageName" "$installerType" "$silentArgs" "$url" ["$url64"  -validExitCodes $validExitCodes -checksum $checksum -checksumType $checksumType -checksum64 $checksum64 -checksumType64 $checksumType64]
-Install-ChocolateyPackage "$packageName" "$installerType" "$silentArgs" "$url"
+#Install-ChocolateyPackage "$packageName" "$installerType" "$silentArgs" "$url"
 # Download and unpack a zip file
 #Install-ChocolateyZipPackage "$packageName" "$url" "$toolsDir" ["$url64" -checksum $checksum -checksumType $checksumType -checksum64 $checksum64 -checksumType64 $checksumType64]
-Install-ChocolateyZipPackage "$packageName" "$url" "$toolsDir"
+#Install-ChocolateyZipPackage "$packageName" "$url" "$toolsDir"
 # Install Visual Studio Package
 #Install-ChocolateyVsixPackage "$packageName" "$url" [$vsVersion] [-checksum $checksum -checksumType $checksumType]
-Install-ChocolateyVsixPackage "$packageName" "$url"
+#Install-ChocolateyVsixPackage "$packageName" "$url"
 
 # see the full list at https://github.com/chocolatey/choco/wiki/HelpersReference
 # downloader that the main helpers use to download items
@@ -47,11 +47,11 @@ Install-ChocolateyVsixPackage "$packageName" "$url"
 # PORTABLE EXAMPLE
 #$binRoot = Get-BinRoot
 #$installDir = Join-Path $binRoot "$packageName"
-#Write-Host "Adding `'$installDir`' to the path and the current shell path"
-#Install-ChocolateyPath "$installDir"
-#$env:Path = "$($env:Path);$installDir"
+Write-Host "Adding `'$toolsDir`' to the path and the current shell path"
+Install-ChocolateyPath "$toolsDir"
+$env:Path = "$($env:Path);$toolsDir"
 
 # if removing $url64, please remove from here
 # despite the name "Install-ChocolateyZipPackage" this also works with 7z archives
-Install-ChocolateyZipPackage "$packageName" "$url" "$installDir" "$url64"
+#Install-ChocolateyZipPackage "$packageName" "$url" "$installDir" "$url64"
 # END PORTABLE EXAMPLE

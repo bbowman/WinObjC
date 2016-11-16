@@ -12,10 +12,10 @@
             <BasePackageVersion>0.0.1</BasePackageVersion>
         </PropertyGroup>
         <PropertyGroup Condition="'$(GitBranch)' != 'develop' And '$(GitBranch)' != 'master'">
-            <PackageVersion>$(BasePackageVersion)-$([System.DateTime]::Now.ToString(yyyyMMddhhmmss)).pr</PackageVersion>
+            <PackageVersion>$(BasePackageVersion)-pr$([System.DateTime]::Now.ToString(yyyyMMddhhmmss))</PackageVersion>
         </PropertyGroup>
         <PropertyGroup Condition="'$(GitBranch)' == 'develop'">
-            <PackageVersion>$(BasePackageVersion)-$([System.DateTime]::Now.ToString(yyyyMMddhhmmss)).dev</PackageVersion>
+            <PackageVersion>$(BasePackageVersion)-dev$([System.DateTime]::Now.ToString(yyyyMMddhhmmss))</PackageVersion>
         </PropertyGroup>
         <PropertyGroup Condition="'$(GitBranch)' == 'master'">
             <PackageVersion>$(BasePackageVersion)</PackageVersion>
