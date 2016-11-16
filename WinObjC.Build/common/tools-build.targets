@@ -4,7 +4,7 @@
   <UsingTask TaskName="GenVersionFiles" AssemblyFile="GenVersionFiles.dll"/>
 
   <PropertyGroup>
-    <WinObjCVersionFile>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..\build\winobjc.version'))</WinObjCVersionFile>
+    <WinObjCVersionFile>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'winobjc.version'))</WinObjCVersionFile>
     <SharedVersionHeaderDir>$(IntermediateOutputPath)</SharedVersionHeaderDir>
     <SharedHeaderFile Condition="'$(ProjectExt)' == '.csproj'">$(SharedVersionHeaderDir)\SharedAssemblyInfo.cs</SharedHeaderFile>
     <SharedHeaderFile Condition="'$(ProjectExt)' == '.vcxproj'">$(SharedVersionHeaderDir)\SharedVersion.h</SharedHeaderFile>
