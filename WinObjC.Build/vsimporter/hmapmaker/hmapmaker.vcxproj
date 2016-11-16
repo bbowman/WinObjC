@@ -17,6 +17,7 @@
     <RootNamespace>hmapmaker</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -36,6 +37,7 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
+    <Import Project="..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets" Condition="Exists('..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -113,21 +115,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets" Condition="Exists('..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets')" />
-  </ImportGroup>
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
+    <ItemGroup>
+      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+        <PackagePath>build\bin\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.props'))" />
     <Error Condition="!Exists('..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets'))" />
-  </Target>
-    <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
-    <ItemGroup>
-      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
-        <PackagePath>build\bin\%(Filename)%(Extension)</PackagePath>
-      </PackageFile>
-    </ItemGroup>
   </Target>
 </Project>
