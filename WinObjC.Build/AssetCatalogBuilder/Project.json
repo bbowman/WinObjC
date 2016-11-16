@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "CommandLineParser": "1.9.71",
-    "NuGet.Build.Packaging": "0.1.161-dev"
+    "NuGet.Build.Packaging": "0.1.163-pr61"
   },
   "frameworks": {
     ".NETFramework,Version=v4.5": {}
