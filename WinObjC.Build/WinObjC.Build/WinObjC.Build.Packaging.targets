@@ -35,6 +35,9 @@
              <!-- Include /deps/ folder. -->
              <_DepsFiles Include="$(MSBuildThisFileDirectory)..\deps\**\*.*"/>
 
+             <!-- Include /bin/ folder. -->
+             <_BinFiles Include="$(MSBuildThisFileDirectory)..\bin\**\*.*"/>
+
             <PackageFile Include="@(_MSVCFiles)">
                 <PackagePath>build\msvc\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
             </PackageFile>
@@ -43,6 +46,9 @@
             </PackageFile>
             <PackageFile Include="@(_DepsFiles)">
                 <PackagePath>build\deps\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+            </PackageFile>
+            <PackageFile Include="@(_BinFiles)">
+                <PackagePath>build\bin\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
             </PackageFile>
         </ItemGroup>
         

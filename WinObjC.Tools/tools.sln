@@ -19,8 +19,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlistCpp", "vsimporter\Plis
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsimporter", "vsimporter\vsimporter.vcxproj", "{6EAF3089-F641-4FC2-BEE5-512CB4C43DFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetCatalogBuilder", "AssetCatalogBuilder\AssetCatalogBuilder.csproj", "{9C3F6F2D-A21C-43AE-903A-628C4184B121}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xamltools", "vsimporter\xib2xaml\xamltools\xamltools.csproj", "{0C1B7E5B-2252-49B5-89EC-FD86A526057D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xib2xaml", "vsimporter\xib2xaml\xib2xaml\xib2xaml.csproj", "{816ECDCE-018E-4A5F-BC32-87B676D8119C}"
@@ -65,10 +63,6 @@ Global
 		{6EAF3089-F641-4FC2-BEE5-512CB4C43DFF}.Debug|x86.Build.0 = Debug|Win32
 		{6EAF3089-F641-4FC2-BEE5-512CB4C43DFF}.Release|x86.ActiveCfg = Release|Win32
 		{6EAF3089-F641-4FC2-BEE5-512CB4C43DFF}.Release|x86.Build.0 = Release|Win32
-		{9C3F6F2D-A21C-43AE-903A-628C4184B121}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9C3F6F2D-A21C-43AE-903A-628C4184B121}.Debug|x86.Build.0 = Debug|Any CPU
-		{9C3F6F2D-A21C-43AE-903A-628C4184B121}.Release|x86.ActiveCfg = Release|Any CPU
-		{9C3F6F2D-A21C-43AE-903A-628C4184B121}.Release|x86.Build.0 = Release|Any CPU
 		{0C1B7E5B-2252-49B5-89EC-FD86A526057D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{0C1B7E5B-2252-49B5-89EC-FD86A526057D}.Debug|x86.Build.0 = Debug|Any CPU
 		{0C1B7E5B-2252-49B5-89EC-FD86A526057D}.Release|x86.ActiveCfg = Release|Any CPU

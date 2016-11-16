@@ -16,9 +16,10 @@
         "netstandard1.6",
         "net20",
         "net35",
-    "net40",
-    "net45",
-    "net452",
+        "net40",
+        "net45",
+        "net452",
+        "net461",
         "native",
         "monoandroid",
         "xamarinios10"

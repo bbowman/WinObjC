@@ -49,8 +49,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AssetCatalogBuilder\AssetCatalogBuilder.csproj" />
     <ProjectReference Include="..\ClangCompileTask\ClangCompile.csproj" />
     <ProjectReference Include="..\PropSchemaGen\PropSchemaGen.csproj" />
+    <ProjectReference Include="..\xib2xaml\xamltools\xamltools.csproj" />
+    <ProjectReference Include="..\xib2xaml\xib2xaml\xib2xaml.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
