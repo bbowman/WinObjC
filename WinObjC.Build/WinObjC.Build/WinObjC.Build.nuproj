@@ -52,6 +52,9 @@
     <ProjectReference Include="..\AssetCatalogBuilder\AssetCatalogBuilder.csproj" />
     <ProjectReference Include="..\ClangCompileTask\ClangCompile.csproj" />
     <ProjectReference Include="..\PropSchemaGen\PropSchemaGen.csproj" />
+    <ProjectReference Include="..\vsimporter\hmapmaker\hmapmaker.vcxproj" />
+    <ProjectReference Include="..\vsimporter\sb-expandvars\sb-expandvars.vcxproj" />
+    <ProjectReference Include="..\vsimporter\xib2nib\xib2nib.vcxproj" />
     <ProjectReference Include="..\xib2xaml\xamltools\xamltools.csproj" />
     <ProjectReference Include="..\xib2xaml\xib2xaml\xib2xaml.csproj" />
   </ItemGroup>

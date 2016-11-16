@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.props" Condition="Exists('..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -268,21 +269,32 @@
     <ProjectReference Include="..\..\deps\3rdparty\AppInsights\Projects\AppInsights_Win32\core\core.vcxproj">
       <Project>{f2377726-d69d-4a26-a3af-969fd0399427}</Project>
     </ProjectReference>
-    <ProjectReference Include="PlistCpp.vcxproj">
+    <ProjectReference Include="PlistCpp\PlistCpp.vcxproj">
       <Project>{b25dbff1-1138-4413-8dc0-a2eebb4a7c28}</Project>
     </ProjectReference>
-    <ProjectReference Include="pugixml.vcxproj">
+    <ProjectReference Include="pugixml\pugixml.vcxproj">
       <Project>{07cf01c0-b887-499d-ad9c-799cb6a9fe64}</Project>
     </ProjectReference>
-    <ProjectReference Include="WBITelemetry.vcxproj">
+    <ProjectReference Include="WBITelemetry\WBITelemetry.vcxproj">
       <Project>{23a635aa-6d82-4faa-b208-11c4c51bdb9d}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="vsimporter.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\common\tools-build.targets" />
+    <Import Project="..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets" Condition="Exists('..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.props'))" />
+    <Error Condition="!Exists('..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Build.Packaging.0.1.161-dev\build\NuGet.Build.Packaging.targets'))" />
+  </Target>
 </Project>
