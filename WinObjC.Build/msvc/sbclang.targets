@@ -661,7 +661,7 @@
 
 
   <PropertyGroup>
-    <FixAdditionalLibraryDirectoriesLinkDependsOn>FixAdditionalLibraryDirectoriesWinMD;XamlPreLink</FixAdditionalLibraryDirectoriesLinkDependsOn>
+    <FixAdditionalLibraryDirectoriesLinkDependsOn>FixAdditionalLibraryDirectoriesWinMD;</FixAdditionalLibraryDirectoriesLinkDependsOn>
     <FixAdditionalLibraryDirectoriesLinkDependsOn Condition="'$(WindowsAppContainer)' == 'true'">$(FixAdditionalLibraryDirectoriesLinkDependsOn);XamlPreLink</FixAdditionalLibraryDirectoriesLinkDependsOn>
   </PropertyGroup>
 
