@@ -403,6 +403,7 @@
         <PrecompiledHeader>NotUsing</PrecompiledHeader>
         <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
         <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+        <CallingConvention>Cdecl</CallingConvention>
       </ClCompile>
     </ItemGroup>
 
