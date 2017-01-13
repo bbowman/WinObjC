@@ -46,10 +46,6 @@
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
 
       <ItemGroup>
-          <PackageFile Include="WinObjC.Frameworks.UWP">
-            <Kind>Dependency</Kind>
-            <Version>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))--</Version>
-          </PackageFile>
 
           <!-- Frameworks without a module that build them also need includes added (though how those still exist is a little curious) -->
           <_ApplicationServiesIncludes Include="$(MSBuildThisFileDirectory)..\..\include\ApplicationServices\*.*"/>
