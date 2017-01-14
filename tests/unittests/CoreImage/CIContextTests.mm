@@ -29,19 +29,18 @@ TEST(CoreImage, CGImageFromRect) {
     CIContext* context = [CIContext contextWithOptions:nil];
     ASSERT_TRUE_MSG(context != nil, "Failed: CIContext is nil.");
 
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    char* executablePath = strrchr(fullPath, '\\');
+    auto fullPath = GET_CURRENT_TEST_DIRECTORY();
+    char* executablePath = strrchr(&fullPath[0], '\\');
     const char* relativePathToPhoto = "\\Photo2.jpg";
     strncpy(executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
-    UIImage* photo = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
+    UIImage* photo = [UIImage imageNamed:[NSString stringWithCString:fullPath.c_str()]];
     CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
     CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
     photo = [UIImage imageWithCGImage:cgImage];
 
     const char* relativePathToCroppedPhoto = "\\CroppedPhoto2.jpg";
     strncpy(executablePath, relativePathToCroppedPhoto, strlen(relativePathToCroppedPhoto) + 1);
-    UIImage* croppedPhoto = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
+    UIImage* croppedPhoto = [UIImage imageNamed:[NSString stringWithCString:fullPath.c_str()]];
 
     NSData* photoData = UIImagePNGRepresentation(photo);
     NSData* croppedPhotoData = UIImagePNGRepresentation(croppedPhoto);

@@ -20,9 +20,8 @@
 #import <Starboard/SmartTypes.h>
 
 static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
-    static char fullPath[_MAX_PATH];
-    static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
-    return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
+    static auto fullPath = GET_CURRENT_TEST_DIRECTORY();
+    return [NSURL fileURLWithPath:[@(fullPath.c_str()) stringByAppendingPathComponent:relativePath]];
 }
 
 TEST(UIFont, FamilyName) {

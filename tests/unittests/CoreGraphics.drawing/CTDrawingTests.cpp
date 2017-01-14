@@ -20,9 +20,8 @@
 
 #ifdef WINOBJC
 static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
-    static char fullPath[_MAX_PATH];
-    static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
-    return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
+    return [NSURL fileURLWithPath:[[@(GET_CURRENT_TEST_DIRECTORY().c_str()) stringByDeletingLastPathComponent]
+                                      stringByAppendingPathComponent:relativePath]];
 }
 #endif // WINOBJC
 

@@ -31,19 +31,19 @@ struct FailureInfo;
 
 #pragma push_macro("PCWSTR")
 #undef PCWSTR
-#define PCWSTR const wchar_t *
+#define PCWSTR const wchar_t*
 
 #pragma push_macro("PWSTR")
 #undef PWSTR
-#define PWSTR wchar_t *
+#define PWSTR wchar_t*
 
 #pragma push_macro("PCSTR")
 #undef PCSTR
-#define PCSTR const char *
+#define PCSTR const char*
 
 #pragma push_macro("PSTR")
 #undef PSTR
-#define PSTR char *
+#define PSTR char*
 
 #pragma push_macro("ARRAYSIZE")
 #undef ARRAYSIZE
@@ -172,8 +172,8 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
     }                                                                                                                                \
     inline ENUMTYPE operator^(ENUMTYPE a, ENUMTYPE b) {                                                                              \
         return ENUMTYPE(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) ^ ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b));      \
-    } inline ENUMTYPE&                                                                                                               \
-    operator^=(ENUMTYPE& a, ENUMTYPE b) {                                                                                            \
+    }                                                                                                                                \
+    inline ENUMTYPE& operator^=(ENUMTYPE& a, ENUMTYPE b) {                                                                           \
         return (ENUMTYPE&)(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type&)a) ^= ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); \
     }                                                                                                                                \
     }

@@ -16,7 +16,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <CoreGraphics/CGImage.h>
 #import <Foundation/Foundation.h>
 #import <ImageIO/ImageIO.h>
@@ -33,7 +33,8 @@ const CFStringRef kUTTypeData = static_cast<const CFStringRef>(@"public.data");
 static NSString* getPathForFile(const wchar_t* fileName) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
-    GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
+    auto testDir = GET_CURRENT_TEST_DIRECTORY();
+    std::mbstowcs(fullPath, testDir.c_str(), _MAX_PATH);
 
     // split test startup full path into components like drive, directory, filename and ext etc.
     wchar_t drive[_MAX_DRIVE];
@@ -49,10 +50,19 @@ static NSString* getPathForFile(const wchar_t* fileName) {
     return [NSString stringWithCharacters:(const unichar*)fullPath length:wcsnlen_s(fullPath, _MAX_PATH)];
 }
 
+static NSString* getPathForOutFile(const wchar_t* fileName) {
+    return [[[NSFileManager defaultManager] currentDirectoryPath]
+        stringByAppendingPathComponent:[NSString stringWithCharacters:(const unichar*)(fileName) length:wcsnlen_s(fileName, _MAX_PATH)]];
+}
+
 static NSData* getDataFromImageFile(const wchar_t* imageFilename) {
     NSString* testFileFullPath = getPathForFile(imageFilename);
 
     return [NSData dataWithContentsOfFile:testFileFullPath];
+}
+
+static NSData* getDataFromImageFile(CFURLRef imageURL) {
+    return [NSData dataWithContentsOfURL:(NSURL*)imageURL];
 }
 
 static CFURLRef getURLRefFromFilename(const wchar_t* filename) {
@@ -61,7 +71,7 @@ static CFURLRef getURLRefFromFilename(const wchar_t* filename) {
 }
 
 static CFURLRef getURLRefForOutFile(const wchar_t* filename) {
-    NSString* testFileFullPath = getPathForFile(filename);
+    NSString* testFileFullPath = getPathForOutFile(filename);
     [[NSFileManager defaultManager] removeItemAtPath:testFileFullPath error:nil];
     return (CFURLRef)[NSURL fileURLWithPath:testFileFullPath];
 }
@@ -419,7 +429,8 @@ TEST(ImageIO, NegativeScenarioTest) {
 
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
-    GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
+    auto testDir = GET_CURRENT_TEST_DIRECTORY();
+    std::mbstowcs(fullPath, testDir.c_str(), _MAX_PATH);
 
     // split test startup full path into components like drive, directory, filename and ext etc.
     wchar_t drive[_MAX_DRIVE];
@@ -707,7 +718,7 @@ TEST(ImageIO, DestinationTest) {
     CGImageDestinationFinalize(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -733,7 +744,7 @@ TEST(ImageIO, DestinationTest) {
     CGImageDestinationFinalize(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile2);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -759,7 +770,7 @@ TEST(ImageIO, DestinationTest) {
     CGImageDestinationFinalize(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile3);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile3);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -785,7 +796,7 @@ TEST(ImageIO, DestinationTest) {
     CGImageDestinationFinalize(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile4);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile4);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -811,7 +822,7 @@ TEST(ImageIO, DestinationTest) {
     CGImageDestinationFinalize(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile5);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile5);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -845,7 +856,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
 
     // Read back in the newly written image to check properties
     CFRelease(imageSource);
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -871,7 +882,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     CFRelease(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile2);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -897,7 +908,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     CFRelease(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile3);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile3);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -923,7 +934,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     CFRelease(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile4);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile4);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -965,7 +976,7 @@ TEST(ImageIO, DestinationMultiFrameTest) {
     CFRelease(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -1029,7 +1040,7 @@ TEST(ImageIO, DestinationMultiFrameGifTest) {
     CFRelease(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -1183,7 +1194,7 @@ TEST(ImageIO, DestinationOptionsTest) {
     CFRelease(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -1221,7 +1232,7 @@ TEST(ImageIO, DestinationOptionsTest) {
     };
 
     NSDictionary* encodeDictionary = @{
-        (id) kCGImagePropertyGIFDictionary : gifEncodeOptions,
+        (id)kCGImagePropertyGIFDictionary : gifEncodeOptions,
     };
 
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeGIF, 3, NULL);
@@ -1235,7 +1246,7 @@ TEST(ImageIO, DestinationOptionsTest) {
     CFRelease(myImageDest);
 
     // Read back in the newly written image to check properties
-    imageData = getDataFromImageFile(outFile2);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -1294,7 +1305,7 @@ TEST(ImageIO, DestinationImageOptionsTIFFTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile = L"outphoto_options.tif";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     NSDictionary* gpsOptions = @{
         (id)kCGImagePropertyGPSLatitude : [NSNumber numberWithDouble:100.55],
@@ -1337,7 +1348,7 @@ TEST(ImageIO, DestinationImageOptionsTIFFTest) {
     CGImageDestinationFinalize(myImageDest);
     CFRelease(myImageDest);
 
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -1381,7 +1392,7 @@ TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile = L"outphoto_options.jpg";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     NSDictionary* gpsOptions = @{
         (id)kCGImagePropertyGPSLatitude : [NSNumber numberWithDouble:100.55],
@@ -1424,7 +1435,7 @@ TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     CGImageDestinationFinalize(myImageDest);
     CFRelease(myImageDest);
 
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -1470,7 +1481,7 @@ TEST(ImageIO, DestinationImageOptionsGIFTest) {
     CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     NSDictionary* gifOptions = @{
-        (id) kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:0.05],
+        (id)kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:0.05],
     };
 
     int orientation = 2;
@@ -1488,7 +1499,7 @@ TEST(ImageIO, DestinationImageOptionsGIFTest) {
     CGImageDestinationFinalize(myImageDest);
     CFRelease(myImageDest);
 
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
@@ -1544,7 +1555,7 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
     CGImageDestinationFinalize(myImageDest);
     CFRelease(myImageDest);
 
-    imageData = getDataFromImageFile(outFile);
+    imageData = getDataFromImageFile(imgUrl);
     ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");

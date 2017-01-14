@@ -33,11 +33,21 @@
 #include "EbrDevRandomFile.h"
 #include "EbrStorageFile.h"
 
+#include <COMIncludes.h>
+#include <wrl\client.h>
+#include <wrl\wrappers\corewrappers.h>
+#include <windows.storage.h>
+#include <COMIncludes_End.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
+
 static const wchar_t* TAG = L"EbrFile";
 
 std::mutex EbrFile::s_fileMapLock{};
 std::map<int, std::shared_ptr<EbrFile>> EbrFile::s_fileMap{};
-int EbrFile::s_maxFileId{0};
+int EbrFile::s_maxFileId{ 0 };
 
 std::shared_ptr<EbrFile> EbrFile::GetFile(int fid) {
     std::lock_guard<std::mutex> guard(s_fileMapLock);
@@ -80,17 +90,16 @@ int EbrOpen(const char* file, int mode, int share) {
 }
 
 int EbrOpenWithPermission(const char* file, int mode, int share, int pmode) {
-
     std::shared_ptr<EbrFile> fileToAdd;
 
     // Special random number device. Just a stub.
     fileToAdd = EbrDevRandomFile::CreateInstance(file, mode, share, pmode);
-    
+
     if (!fileToAdd) {
         // Special file type for cached storage files.
         fileToAdd = EbrStorageFile::CreateInstance(file, mode, share, pmode);
-    } 
-    
+    }
+
     if (!fileToAdd) {
         // No more special types. Assume its a real file.
         fileToAdd = EbrIOFile::CreateInstance(file, mode, share, pmode);
@@ -163,14 +172,50 @@ bool EbrUnlink(const char* path) {
 
 #define FSROOT "."
 #define mkdir _mkdir
-char g_WritableFolder[2048] = ".";
 
-void EbrSetWritableFolder(const char* folder) {
-    strcpy_s(g_WritableFolder, folder);
+Wrappers::HString _getAppDataPath() {
+    Wrappers::HString toReturn;
+    ComPtr<IStorageFolder> folder;
+    ComPtr<IApplicationDataStatics> applicationDataStatics;
+    ComPtr<IApplicationData> applicationData;
+    ComPtr<IStorageItem> storageItem;
+
+    if (FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(),
+                                    &applicationDataStatics))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationDataStatics->get_Current(&applicationData))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationData->get_LocalFolder(&folder))) {
+        return toReturn;
+    }
+
+    if (FAILED(folder.As<IStorageItem>(&storageItem))) {
+        return toReturn;
+    }
+
+    if (FAILED(storageItem->get_Path(toReturn.GetAddressOf()))) {
+        return toReturn;
+    }
+
+    return toReturn;
 }
 
-const char* EbrGetWritableFolder() {
-    return g_WritableFolder;
+const wchar_t* _EbrGetBaseWriteablePath() {
+    static Wrappers::HString basePath = []() {
+        Wrappers::HString appDataPath = _getAppDataPath();
+        if (!appDataPath.IsValid()) {
+            appDataPath.Set(L".");
+        }
+
+        return appDataPath;
+    }();
+
+    unsigned int rawLength;
+    return WindowsGetStringRawBuffer(basePath.Get(), &rawLength);
 }
 
 bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
@@ -179,7 +224,7 @@ bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
         return true;
     }
     if (_stricmp(dirName, "Documents") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\Documents", g_WritableFolder);
+        sprintf_s(dirOut, maxLen, "%ls\\Documents", _EbrGetBaseWriteablePath());
         mkdir(dirOut);
 
         char tmpDir[4096];
@@ -189,27 +234,27 @@ bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
         return true;
     }
     if (_stricmp(dirName, "Cache") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\cache", g_WritableFolder);
+        sprintf_s(dirOut, maxLen, "%ls\\cache", _EbrGetBaseWriteablePath());
         mkdir(dirOut);
         return true;
     }
     if (_stricmp(dirName, "Library") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\Library", g_WritableFolder);
+        sprintf_s(dirOut, maxLen, "%ls\\Library", _EbrGetBaseWriteablePath());
         mkdir(dirOut);
         return true;
     }
     if (_stricmp(dirName, "AppSupport") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\AppSupport", g_WritableFolder);
+        sprintf_s(dirOut, maxLen, "%ls\\AppSupport", _EbrGetBaseWriteablePath());
         mkdir(dirOut);
         return true;
     }
     if (_stricmp(dirName, "tmp") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\tmp", g_WritableFolder);
+        sprintf_s(dirOut, maxLen, "%ls\\tmp", _EbrGetBaseWriteablePath());
         mkdir(dirOut);
         return true;
     }
     if (_stricmp(dirName, "shared") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\shared", g_WritableFolder);
+        sprintf_s(dirOut, maxLen, "%ls\\shared", _EbrGetBaseWriteablePath());
         mkdir(dirOut);
         return true;
     }

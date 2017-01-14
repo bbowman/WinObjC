@@ -22,60 +22,71 @@
 #import <UWP/WindowsServicesMaps.h>
 #import <UWP/WindowsApplicationModel.h>
 
-static const NSTimeInterval c_testTimeoutInSec = 60;
+class ProjectionSDispatcherTest {
+public:
+    BEGIN_TEST_CLASS(ProjectionSDispatcherTest)
+    END_TEST_CLASS()
 
-TEST(Projection, WUCCoreDispatcherSanity) {
-    LOG_INFO("Projection CoreDispatcher Sanity Test: ");
+    TEST_CLASS_SETUP(ProjectionTestClassSetup) {
+        return FunctionalTestSetupUIApplication();
+    }
 
-    ASSERT_FALSE_MSG([NSThread isMainThread], "Failed: Test cannot run on Main thread")
+    TEST_CLASS_CLEANUP(ProjectionTestCleanup) {
+        return FunctionalTestCleanupUIApplication();
+    }
 
-    __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    TEST_METHOD(WUCCoreDispatcherSanity) {
+        LOG_INFO("Projection CoreDispatcher Sanity Test: ");
 
-    WUCDispatchedHandler dispatchedHandler = ^() {
-        dispatch_semaphore_signal(semaphore);
-    };
+        ASSERT_FALSE_MSG([NSThread isMainThread], "Failed: Test cannot run on Main thread")
 
-    __block StrongId<WUCCoreDispatcher> coreDispatcher;
+        __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-    // Get the dispatcher for the main thread.
-    // RunAsync needs to be called on the dispatcher for main thread.
-    dispatch_sync(dispatch_get_main_queue(),
-                  ^{
-                      coreDispatcher = [[WUCCoreWindow getForCurrentThread] dispatcher];
-                  });
+        WUCDispatchedHandler dispatchedHandler = ^() {
+            dispatch_semaphore_signal(semaphore);
+        };
 
-    [coreDispatcher runAsync:WUCCoreDispatcherPriorityNormal agileCallback:dispatchedHandler];
-    long result = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(c_testTimeoutInSec * NSEC_PER_SEC)));
-    dispatch_release(semaphore);
+        __block StrongId<WUCCoreDispatcher> coreDispatcher;
 
-    ASSERT_EQ_MSG(0, result, "FAILED: Test timed out, handler not called\n");
-}
+        // Get the dispatcher for the main thread.
+        // RunAsync needs to be called on the dispatcher for main thread.
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            coreDispatcher = [[WUCCoreWindow getForCurrentThread] dispatcher];
+        });
 
-TEST(Projection, AsyncOnBackgroundThread) {
-    LOG_INFO("Validate callback on a background thread");
-    __block bool callbackCalled = false;
+        [coreDispatcher runAsync:WUCCoreDispatcherPriorityNormal agileCallback:dispatchedHandler];
+        long result = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(c_testTimeoutInSec * NSEC_PER_SEC)));
+        dispatch_release(semaphore);
 
-    WDGBasicGeoposition* geoposition = [[WDGBasicGeoposition alloc] init];
-    geoposition.latitude = 47.6381966;
-    geoposition.longitude = -122.1313785;
+        ASSERT_EQ_MSG(0, result, "FAILED: Test timed out, handler not called\n");
+    }
 
-    WDGGeopoint* geopoint = [WDGGeopoint make:geoposition];
+    TEST_METHOD(AsyncOnBackgroundThread) {
+        LOG_INFO("Validate callback on a background thread");
+        __block bool callbackCalled = false;
 
-    dispatch_group_t group = dispatch_group_create();
-    dispatch_group_enter(group);
+        WDGBasicGeoposition* geoposition = [[WDGBasicGeoposition alloc] init];
+        geoposition.latitude = 47.6381966;
+        geoposition.longitude = -122.1313785;
 
-    [WSMMapLocationFinder findLocationsAtAsync:geopoint
-        success:^void(WSMMapLocationFinderResult* results) {
-            callbackCalled = true;
-            dispatch_group_leave(group);
-        }
-        failure:^void(NSError* error) {
-            callbackCalled = true;
-            dispatch_group_leave(group);
-        }];
+        WDGGeopoint* geopoint = [WDGGeopoint make:geoposition];
 
-    dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(c_testTimeoutInSec * NSEC_PER_SEC)));
-    dispatch_release(group);
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_group_enter(group);
 
-    ASSERT_TRUE_MSG(callbackCalled, "FAILED: Test timed out before callback was invoked.\n");
-}
+        [WSMMapLocationFinder findLocationsAtAsync:geopoint
+            success:^void(WSMMapLocationFinderResult* results) {
+                callbackCalled = true;
+                dispatch_group_leave(group);
+            }
+            failure:^void(NSError* error) {
+                callbackCalled = true;
+                dispatch_group_leave(group);
+            }];
+
+        dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(c_testTimeoutInSec * NSEC_PER_SEC)));
+        dispatch_release(group);
+
+        ASSERT_TRUE_MSG(callbackCalled, "FAILED: Test timed out before callback was invoked.\n");
+    }
+};

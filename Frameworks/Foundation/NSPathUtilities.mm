@@ -39,7 +39,9 @@ NSString* NSFullUserName() {
 // Helper that gets the path for a folder dirName under the current app's AppData/Local... directory,
 // creating the folder if necessary
 NSString* _getCreateAppDataLocalDir(const char* dirName) {
-    auto ret = [NSString stringWithFormat:@"%hs/%hs", EbrGetWritableFolder(), dirName];
+    const wchar_t* basePath = _EbrGetBaseWriteablePath();
+    auto ret = [NSMutableString stringWithCharacters:(const unichar*)(basePath) length:wcsnlen_s(basePath, _MAX_PATH)];
+    [ret appendFormat:@"/%hs", dirName];
     _mkdir([ret cStringUsingEncoding:NSUTF8StringEncoding]);
     return ret;
 }
@@ -47,7 +49,9 @@ NSString* _getCreateAppDataLocalDir(const char* dirName) {
 // Override for when a higher-level directory needs to be created first (eg: Foo1/Foo2/)
 NSString* _getCreateAppDataLocalDir(const char* dirName1, const char* dirName2) {
     _getCreateAppDataLocalDir(dirName1);
-    auto ret = [NSString stringWithFormat:@"%hs/%hs/%hs", EbrGetWritableFolder(), dirName1, dirName2];
+    const wchar_t* basePath = _EbrGetBaseWriteablePath();
+    auto ret = [NSMutableString stringWithCharacters:(const unichar*)(basePath) length:wcsnlen_s(basePath, _MAX_PATH)];
+    [ret appendFormat:@"/%hs/%hs", dirName1, dirName2];
     _mkdir([ret cStringUsingEncoding:NSUTF8StringEncoding]);
     return ret;
 }

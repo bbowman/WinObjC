@@ -38,13 +38,10 @@ void InitializeApp() {
     }
     initialized = true;
 
-    // Set our writable and temp folders
+    // Set our temp folders
     char writableFolder[2048];
     size_t outLen;
-    auto pathData = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
-    wcstombs_s(&outLen, writableFolder, pathData->Data(), sizeof(writableFolder) - 1);
-    EbrSetWritableFolder(writableFolder);
-
+   
     auto tempPathData = Windows::Storage::ApplicationData::Current->TemporaryFolder->Path;
     wcstombs_s(&outLen, writableFolder, tempPathData->Data(), sizeof(writableFolder) - 1);
     SetTemporaryFolder(writableFolder);

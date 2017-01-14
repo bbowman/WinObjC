@@ -84,12 +84,10 @@ SB_EXPORT int EbrGetTimeOfDay(struct EbrTimeval* curtime);
 SB_EXPORT double EbrGetMediaTime();
 SB_EXPORT int EbrGetWantedOrientation();
 
-//  maxLen should be MAX_PATH.  Sorry Jordan.
 SB_EXPORT bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen);
-SB_EXPORT const char* EbrGetWritableFolder();
-SB_EXPORT void EbrSetWritableFolder(const char* folder);
-
 SB_EXPORT void EbrBlockIfBackground();
+
+SB_EXPORT const wchar_t* _EbrGetBaseWriteablePath();
 
 typedef void* EbrEvent;
 
@@ -107,4 +105,3 @@ typedef struct {
 
 SB_EXPORT int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
 SB_EXPORT void EbrEventDestroy(EbrEvent event);
-

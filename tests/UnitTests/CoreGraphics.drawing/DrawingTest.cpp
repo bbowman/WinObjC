@@ -62,13 +62,11 @@ CFStringRef testing::DrawTest<TComparator>::CreateAdditionalTestDescription() {
 
 template <typename TComparator>
 CFStringRef testing::DrawTest<TComparator>::CreateOutputFilename() {
-    const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
     woc::unique_cf<CFStringRef> additionalDesc{ CreateAdditionalTestDescription() };
     woc::unique_cf<CFStringRef> filename{ CFStringCreateWithFormat(nullptr,
                                                                    nullptr,
-                                                                   CFSTR("TestImage.%s.%s%s%@.png"),
-                                                                   test_info->test_case_name(),
-                                                                   test_info->name(),
+                                                                   CFSTR("TestImage.%s%s%@.png"),
+                                                                   GET_TEST_FULL_NAME().c_str(),
                                                                    (additionalDesc ? "." : ""),
                                                                    (additionalDesc ? additionalDesc.get() : CFSTR(""))) };
     return filename.release();
