@@ -24,7 +24,7 @@
 // Functional tests will unclude GTest and a functional test api header that diverts some of the logging macros to use Microsoft TAEF APIs.
 #include "gtest-api.h"
 #if defined FUNCTIONAL_TEST_FRAMEWORK
-#include "functionaltest-api.h"
+#include "test-api.h"
 #endif
 
 #include <vector>
