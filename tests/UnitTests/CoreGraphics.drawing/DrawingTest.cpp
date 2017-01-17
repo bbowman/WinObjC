@@ -113,9 +113,9 @@ void testing::DrawTest::TearDown() {
 
         if (delta.result != ImageComparisonResult::Same) {
             if (delta.result == ImageComparisonResult::Incomparable) {
-                ADD_FAILURE() << "images are incomparable due to a mismatch in dimensions, presence, or byte length";
+                ASSERT_TRUE_MSG(false, "images are incomparable due to a mismatch in dimensions, presence, or byte length");
             } else {
-                ADD_FAILURE() << "images differ nontrivially";
+				ASSERT_TRUE_MSG(false, "images differ nontrivially");
             }
 
             woc::unique_cf<CFStringRef> deltaFilename{

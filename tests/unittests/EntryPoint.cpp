@@ -14,23 +14,19 @@
 //
 //******************************************************************************
 
-#include <windows.h>
-#include <TestFramework.h>
+#include "pch.h"
+#include <gtest-api.h>
+#include <WexTestClass.h>
 
-#ifdef WIN32
-#include <wrl\wrappers\corewrappers.h>
-using namespace Microsoft::WRL::Wrappers;
-#endif
-
-int main(int argc, char** argv) {
-#ifdef WIN32
-    // Initialize the windows runtime, with uninitialized upon destructor invocation.
-    RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-    if (FAILED(initialize)) {
-        return -1;
-    }
-#endif
+MODULE_SETUP(ModuleSetup) {
+    // Initialize GTest framework.
+    int argc = 1;
+    char* argv[] = { "UnitTests" };
     testing::InitGoogleTest(&argc, argv);
-    auto result = RUN_ALL_TESTS();
-    return result;
+
+    return S_OK;
+}
+
+MODULE_CLEANUP(ModuleCleanup) {
+    return S_OK;
 }

@@ -20,11 +20,11 @@
 #include <Foundation/Foundation.h>
 #endif
 
-// Unit tests will include only GTest header.
-// Functional tests will unclude GTest and a functional test api header that diverts some of the logging macros to use Microsoft TAEF APIs.
 #include "gtest-api.h"
-#if defined FUNCTIONAL_TEST_FRAMEWORK
 #include "test-api.h"
+
+#ifdef FUNCTIONAL_TEST_FRAMEWORK
+#include "FunctionalTestHelpers.h"
 #endif
 
 #include <vector>

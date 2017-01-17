@@ -7,13 +7,29 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Inlcude\;$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\TAEF\build\Include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Include\;$(MSBuildThisFileDirectory)..\..\..\include\;$(MSBuildThisFileDirectory)..\..\..\include\xplat;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClangCompile>
+      <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Include\;$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\TAEF\build\Include;</IncludePaths>
+    </ClangCompile>
     <ClangCompile Condition="'$(Platform)'=='ARM'">
       <!-- Remove this once exception handling works on ARM -->
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WINOBJC_DISABLE_TESTS</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\TAEF\build\Library\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Tests.Shared.Logger.vcxproj">
+      <Project>{ED31F79B-D4B3-4D15-A134-1108B0659C98}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>

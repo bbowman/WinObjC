@@ -41,7 +41,6 @@
 #endif
 
 #include "Framework/Framework.h"
-#include "FunctionalTestHelpers.h"
 extern void UIApplicationDefaultInitialize();
 
 /////////////////////////////////////////////////////////
@@ -209,14 +208,14 @@ extern void UIApplicationDefaultInitialize();
 #endif
 #define ASSERT_NEAR_MSG(val1, val2, abs_error, format, ...)                          \
     FunctionalTestLog::SetUserComment(GTestLogPrivate::Format(format, __VA_ARGS__)); \
-    ASSERT_NEAR(expected, actual);
+    ASSERT_NEAR(val1, val2, abs_error);
 
 #ifdef ASSERT_THROW_MSG
 #undef ASSERT_THROW_MSG
 #endif
 #define ASSERT_THROW_MSG(statement, expected_exception, format, ...)                 \
     FunctionalTestLog::SetUserComment(GTestLogPrivate::Format(format, __VA_ARGS__)); \
-    ASSERASSERT_THROW(statement, expected_exception);
+    ASSERT_THROW(statement, expected_exception);
 
 #ifdef ASSERT_NO_THROW_MSG
 #undef ASSERT_NO_THROW_MSG
@@ -403,6 +402,12 @@ extern void UIApplicationDefaultInitialize();
 #define EXPECT_OBJCNE_MSG(val1, val2, format, ...)                                   \
     FunctionalTestLog::SetUserComment(GTestLogPrivate::Format(format, __VA_ARGS__)); \
     EXPECT_OBJCNE(val1, val2);
+
+#ifdef FRIEND_TEST
+#undef FRIEND_TEST
+#endif
+#define FRIEND_TEST(test_case_name, test_name)\
+friend class test_case_name##_##test_name
 
 // clang-format off
 #pragma push_macro("TEST")

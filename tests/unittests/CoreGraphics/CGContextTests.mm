@@ -167,15 +167,15 @@ void cgContextPathApplierFunction(void* info, const CGPathElement* element) {
 
 // Helper function that compares results from cgPathApplierFunction to expected results
 void cgContextPathCompare(NSArray* expected, NSArray* result) {
-    ASSERT_EQ(expected.count, result.count) << "Counts do not match for expected and result";
+    ASSERT_EQ_MSG(expected.count, result.count, "Counts do not match for expected and result");
 
     [expected enumerateObjectsUsingBlock:^(NSDictionary* expectedDict, NSUInteger elementIndex, BOOL* stop) {
         NSDictionary* resultDict = result[elementIndex];
         CGPathElementType expectedType = (CGPathElementType)[expectedDict[kTypeKey] integerValue];
         CGPathElementType resultType = (CGPathElementType)[resultDict[kTypeKey] integerValue];
-        ASSERT_EQ(expectedType, resultType) << "Elements in result and expected do not match";
-        ASSERT_EQ([expectedDict[kPointsKey] count], [resultDict[kPointsKey] count])
-            << "Point count in result and expected element do not match";
+        ASSERT_EQ_MSG(expectedType, resultType, "Elements in result and expected do not match");
+        ASSERT_EQ_MSG([expectedDict[kPointsKey] count], [resultDict[kPointsKey] count],
+            "Point count in result and expected element do not match");
 
         [expectedDict[kPointsKey] enumerateObjectsUsingBlock:^(NSNumber* expectedPointValue, NSUInteger pointIndex, BOOL* stop) {
             float resultPoint = [resultDict[kPointsKey][pointIndex] floatValue];
