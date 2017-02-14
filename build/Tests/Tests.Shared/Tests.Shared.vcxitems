@@ -4,7 +4,6 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
     <ItemsProjectGuid>{EE68A240-536D-4557-AB96-D164E93059A1}</ItemsProjectGuid>
-    <NuGetTargetMoniker>UAP,Version=v10.0</NuGetTargetMoniker>
     <CopyStarboardLibraries>true</CopyStarboardLibraries>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
   </PropertyGroup>
@@ -12,6 +11,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Inlcude\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Include\;$(MSBuildThisFileDirectory)..\..\..\include\;$(MSBuildThisFileDirectory)..\..\..\include\xplat;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>-Wno-nullability-completeness %(AdditionalOptions)</AdditionalOptions>
