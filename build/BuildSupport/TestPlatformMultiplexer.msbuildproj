@@ -47,7 +47,14 @@
 
   <!-- This is where the fun starts. Any custom generic msbuild project goop goes here. -->
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\Tests\**\*.vcxproj" />
+    <!-- Add the nuprojs as project reference under AnyCPU so there isn't parallel contention to build thge same project. 
+         Since this project and the .nuprojs do build multiplexing internally, separate processes could wind up building
+         frameworks at the same time. This is avoided by causing the nuprojs to be built first and getting that multiplexing out of the way. -->
+    <ProjectReference Condition="'$(Platform)' == 'AnyCPU'" Include="$(SolutionDir)\**\*.nuproj" />
+
+    <!-- Make sure all test projects are referenced to multiplex them -->
+    <ProjectReference Condition="'$(Platform)' != 'AnyCPU'" Include="$(SolutionDir)\Tests\**\*.vcxproj" />
+
   </ItemGroup>
 
   <Target Name="BuildForSinglePlatform" > 
@@ -58,11 +65,11 @@
       </MSBuild>
 
       <MSBuild Projects="$(MSBuildProjectFile)"
-         Properties="SkipBuildForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);">
+         Properties="BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);">
       </MSBuild>
   </Target>
 
-  <Target Name="BuildTestsForOtherPlatforms" BeforeTargets="BeforeBuild" Condition="'$(Platform)' == 'AnyCPU'">
+  <Target Name="BuildTestsForOtherPlatforms" AfterTargets="AfterBuild" Condition="'$(Platform)' == 'AnyCPU'">
     <ItemGroup>
       <_PlatformToBuild Include="%(ProjectConfiguration.Platform)"
                 Condition="'%(ProjectConfiguration.Platform)' != '$(Platform)' AND '%(ProjectConfiguration.Configuration)' == '$(Configuration)'" />
