@@ -1,0 +1,4 @@
+[filter "project-json-multiplexer"]
+	clean = ./scripts/git/Adjust-ProjectJson -clean -FileName %f
+	smudge = ./scripts/git/Adjust-ProjectJson -smudge -FileName %f
+	
