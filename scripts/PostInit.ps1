@@ -18,10 +18,12 @@ try {
     Write-Host "Running Project.Json Smudge Filter on working directory"-ForegroundColor Magenta 
 
     # runs it on the repo by checking everything out again
-    # & git stash save
-    # Remove-Item .git/index -Force
-    # & git checkout HEAD -- .
-    # & git stash pop
+    & git stash save
+    
+    Get-ChildItem -Recurse -File -Filter "project.json" | ForEach-Object { git rm --cached $_.FullName }
+
+    & git checkout HEAD -- .
+    & git stash pop
 } finally {
     Pop-Location
 }
