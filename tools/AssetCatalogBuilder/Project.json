@@ -1,12 +1,9 @@
-﻿{
-  "dependencies": {
-    "CommandLineParser": "1.9.71",
-    "NuGet.Build.Packaging": "0.1.186"
-  },
-  "frameworks": {
-    ".NETFramework,Version=v4.5": {}
-  },
-  "runtimes": {
-    "win": {}
-  }
-}
+Get-Content : Cannot find path 'Y:\Arcadia\WinObjC\tools\AssetCatalogBuilder\Project.json' because 
+it does not exist.
+At Y:\Arcadia\WinObjC\scripts\git\adjust-projectjson.ps1:34 char:18
++ $projectJson = ((Get-Content $FileName) -join "`n" | ConvertFrom-Json ...
++                  ~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Y:\Arcadia\WinO...er\Project.json:String) [Get-Conten 
+   t], ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
