@@ -1,9 +1,9 @@
-﻿{
+{
   "dependencies": {
     "GitInfo": "1.1.32",
     "NuGet.Build.Packaging": "0.1.186",
-    "WinObjC.Language": "0.2.160915-*",
-    "WinObjC.Logging": "0.2.160915-*"
+    "WinObjC.Language": "*",
+    "WinObjC.Logging": "*"
   },
   "frameworks": {
     "uap10.0": {}

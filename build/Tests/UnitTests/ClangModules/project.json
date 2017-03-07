@@ -1,9 +1,9 @@
-﻿{
+{
   "dependencies": {
-    "WinObjC.Language": "0.2.160915-*"
+    "WinObjC.Language": "*"
   },
   "frameworks": {
-    "uap10.0": { }
+    "uap10.0": {}
   },
   "runtimes": {
     "win10-arm": {},

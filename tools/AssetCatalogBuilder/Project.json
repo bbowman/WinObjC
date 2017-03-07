@@ -1,4 +1,4 @@
-﻿{
+{
   "dependencies": {
     "CommandLineParser": "1.9.71",
     "NuGet.Build.Packaging": "0.1.186"
