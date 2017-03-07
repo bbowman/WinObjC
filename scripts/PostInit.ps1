@@ -20,9 +20,11 @@ try {
     # runs it on the repo by checking everything out again
     & git stash save
     
-    Get-ChildItem -Recurse -File -Filter "project.json" | ForEach-Object { git rm --cached $_.FullName }
+    Get-ChildItem -Recurse -File -Filter "project.json" | ForEach-Object {
+     & git rm --cached $_.FullName 
+     & git reset HEAD $_.FullName 
+    }
 
-    & git checkout HEAD -- .
     & git stash pop
 } finally {
     Pop-Location
