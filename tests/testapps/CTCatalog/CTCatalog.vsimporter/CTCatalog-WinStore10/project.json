@@ -1,10 +1,20 @@
-Get-Content : Cannot find path 
-'Y:\Arcadia\WinObjC\tests\testapps\CTCatalog\CTCatalog.vsimporter\CTCatalog-WinStore10\project.json' 
-because it does not exist.
-At Y:\Arcadia\WinObjC\scripts\git\adjust-projectjson.ps1:34 char:18
-+ $projectJson = ((Get-Content $FileName) -join "`n" | ConvertFrom-Json ...
-+                  ~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : ObjectNotFound: (Y:\Arcadia\WinO...10\project.json:String) [Get-Conten 
-   t], ItemNotFoundException
-    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
- 
+{
+  "dependencies": {
+    "WinObjC.Frameworks": "0.2.160915-*",
+    "WinObjC.Frameworks.UWP": "0.2.160915-*",
+    "WinObjC.Frameworks.Core": "0.2.160915-*",
+    "WinObjC.Language": "0.2.160915-*",
+    "WinObjC.Logging": "0.2.160915-*"
+  },
+  "frameworks": {
+    "uap10.0": {
+      "imports": "native"
+    }
+  },
+  "runtimes": {
+    "win10-arm": {},
+    "win10-x86": {},
+    "win10-arm-aot": {},
+    "win10-x86-aot": {}
+  }
+}
